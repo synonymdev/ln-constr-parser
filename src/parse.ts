@@ -23,7 +23,11 @@ export interface ParsedConnectionString {
 }
 
 
-
+/**
+ * Splits the address to a host and optionally a port. Throws ParseError if the address is invalid.
+ * @param addressString 
+ * @returns 
+ */
 export function splitHostAndPort(addressString: string): {
     notValidatedHost: string,
     notValidatedPort?: string
@@ -68,10 +72,15 @@ export function splitHostAndPort(addressString: string): {
     }
 
     // Ipv6 compressed
-    // We can't determin the port here. We just assume everything is the ip.
+    // We can't determine the port here as it is ambigious.
     throw new ParseError('Compressed ipv6 host without square brackets []', ParseFailureCode.INVALID_IPV6)
 }
 
+/**
+ * Parses a host. Valid formats: ipv4, ipv6, torv3, domain. Throws ParseError if the host is invalid.
+ * @param hostString 
+ * @returns 
+ */
 export function parseHost(hostString: string): { host: string, hostType: HostType } {
 
     const ipv4Match = ipv4Regex.exec(hostString)
@@ -109,6 +118,13 @@ export function parseHost(hostString: string): { host: string, hostType: HostTyp
     throw new ParseError('Invalid host.', ParseFailureCode.INVALID_HOST)
 }
 
+/**
+ * Address consists of a host and an optional port. The host may be in square brackets [].
+ * Examples: 127.0.0.1:9375, [::1]:9375, synonym.to:9375, 127.0.0.1.
+ * Throws ParseError if the address is invalid.
+ * @param addressString 
+ * @returns 
+ */
 export function parseAddress(addressString: string): { host: string, port?: number, hostType: HostType } {
     const { notValidatedHost, notValidatedPort } = splitHostAndPort(addressString)
     const { host, hostType } = parseHost(notValidatedHost)
@@ -122,6 +138,11 @@ export function parseAddress(addressString: string): { host: string, port?: numb
     }
 }
 
+/**
+ * Parse port number. Must be between 1 and 65535. Throws ParseError if the port is invalid.
+ * @param portString 
+ * @returns 
+ */
 export function parsePort(portString?: string): number | undefined {
     if (!portString) {
         return undefined
@@ -133,6 +154,11 @@ export function parsePort(portString?: string): number | undefined {
     return Number.parseInt(portString)
 }
 
+/**
+ * Parses a pubkey. Throws ParseError if the pubkey is invalid.
+ * @param pubkeyString 
+ * @returns 
+ */
 export function parsePubkey(pubkeyString: string): string {
     const pubkeyMatch = pubkeyRegex.exec(pubkeyString)
     if (!pubkeyMatch) {
