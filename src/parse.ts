@@ -29,10 +29,10 @@ export function splitHostAndPort(addressString: string): {
     notValidatedPort?: string
 } {
     // Easy, host is in square brackets [] and port is optionally behind a colon.
-    const squareBracketMatch = squareBracketsAddressRegex.exec(addressString)
-    const squareBracketContent = squareBracketMatch?.groups?.content
-    const squareBracketPort = squareBracketMatch?.groups?.port
+    const squareBracketMatch = squareBracketsAddressRegex.exec(addressString) 
     if (squareBracketMatch) {
+        const squareBracketContent = squareBracketMatch[2]
+        const squareBracketPort = squareBracketMatch[4]
         return {
             notValidatedHost: squareBracketContent || '',
             notValidatedPort: squareBracketPort
@@ -74,34 +74,34 @@ export function splitHostAndPort(addressString: string): {
 
 export function parseHost(hostString: string): { host: string, hostType: HostType } {
 
-    const validatedIpv4 = ipv4Regex.exec(hostString)?.groups?.ipv4
-    if (validatedIpv4) {
+    const ipv4Match = ipv4Regex.exec(hostString)
+    if (ipv4Match) {
         return {
-            host: validatedIpv4,
+            host: hostString,
             hostType: 'ipv4'
         }
     }
 
-    const validatedIpv6 = ipv6Regex.exec(hostString)?.groups?.ipv6
-    if (validatedIpv6) {
+    const ipv6Match = ipv6Regex.exec(hostString)
+    if (ipv6Match) {
         return {
-            host: validatedIpv6,
+            host: hostString,
             hostType: 'ipv6'
         }
     }
 
-    const validatedTorv3 = torv3Regex.exec(hostString)?.groups?.torv3
-    if (validatedTorv3) {
+    const torv3Match = torv3Regex.exec(hostString)
+    if (torv3Match) {
         return {
-            host: validatedTorv3,
+            host: hostString,
             hostType: 'torv3'
         }
     }
 
-    const validatedDomain = domainNameRegex.exec(hostString)?.groups?.domain
-    if (validatedDomain) {
+    const domainMatch = domainNameRegex.exec(hostString)
+    if (domainMatch) {
         return {
-            host: validatedDomain,
+            host: hostString,
             hostType: 'domain'
         }
     }
@@ -126,20 +126,19 @@ export function parsePort(portString?: string): number | undefined {
     if (!portString) {
         return undefined
     }
-    const validatedPort = portRegex.exec(portString)?.groups?.port
-    if (!validatedPort) {
+    const portMatch = portRegex.exec(portString)
+    if (!portMatch) {
         throw new ParseError('Invalid port.', ParseFailureCode.INVALID_PORT)
     }
-    return Number.parseInt(validatedPort)
+    return Number.parseInt(portString)
 }
 
 export function parsePubkey(pubkeyString: string): string {
-    const nodeIdMatch = pubkeyRegex.exec(pubkeyString)
-    const validatedPubkey = nodeIdMatch?.groups?.pubkey;
-    if (!validatedPubkey) {
+    const pubkeyMatch = pubkeyRegex.exec(pubkeyString)
+    if (!pubkeyMatch) {
         throw new ParseError('Invalid pubkey.', ParseFailureCode.INVALID_PUBKEY)
     }
-    return validatedPubkey
+    return pubkeyString
 }
 
 

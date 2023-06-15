@@ -1,14 +1,8 @@
 import { ParseError, ParseFailureCode } from './ParseError';
 import {parseConnectionString, splitHostAndPort, parseHost, parseAddress, parsePort, parsePubkey} from './parse';
 
-jest.setTimeout(60*1000)
-
-
-
-
 
 describe('parse', () => {
-
     test('splitHostAndPort without []', async () => {
         const {notValidatedHost: host1, notValidatedPort: port1} = splitHostAndPort('127.0.0.1:300')
         expect(host1).toEqual('127.0.0.1')
@@ -45,7 +39,10 @@ describe('parse', () => {
         try {
             splitHostAndPort('2001:db8:3333:4444:5555::8888')
             expect(true).toEqual(false)
-        } catch (e) {
+        } catch (e: any) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_IPV6)
         }
     });
@@ -71,12 +68,18 @@ describe('parse', () => {
             parseHost('127.0.0.1:')
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_HOST)
         }
         try {
             parseHost('127.0.0.1:-1')
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_HOST)
         }
 
@@ -84,6 +87,9 @@ describe('parse', () => {
             parseHost(undefined as any)
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_HOST)
         }
     });
@@ -109,6 +115,9 @@ describe('parse', () => {
             parsePort('0')
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_PORT)
         }
 
@@ -116,6 +125,9 @@ describe('parse', () => {
             parsePort('65536')
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_PORT)
         }
 
@@ -123,6 +135,9 @@ describe('parse', () => {
             parsePort('-1')
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_PORT)
         }
     });
@@ -135,6 +150,9 @@ describe('parse', () => {
             parsePubkey('0300000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5')
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_PUBKEY)
         }
 
@@ -142,6 +160,9 @@ describe('parse', () => {
             parsePubkey('0300000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5fa')
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_PUBKEY)
         }
 
@@ -149,6 +170,9 @@ describe('parse', () => {
             parsePubkey('0100000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5a')
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_PUBKEY)
         }
     });
@@ -163,6 +187,9 @@ describe('parse', () => {
             parseConnectionString('0200000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5f127.0.0.1:9000')
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_ATS)
         }
 
@@ -170,6 +197,9 @@ describe('parse', () => {
             parseConnectionString('0200000000a3e@ff613189ca6c4070c89206ad658e286751eca1f29262948247a5f@127.0.0.1:9000')
             expect(true).toEqual(false)
         } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
             expect(e.code).toEqual(ParseFailureCode.INVALID_ATS)
         }
 
