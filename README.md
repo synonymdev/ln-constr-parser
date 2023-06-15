@@ -23,7 +23,7 @@ console.log(pubKey); // 0200000000a3eff613189ca6c4070c89206ad658e286751eca1f2926
 In case of an invalid connection string, the parser will throw a detailed error of what is wrong.
 
 ```typescript
-import {parseConnectionString, ParseFailureCode} from '@synonymdev/ln-constr-parser';
+import {parseConnectionString, ParseFailureCode, ParseError} from '@synonymdev/ln-constr-parser';
 
 try {
     const connectionString = 'pubkey@host:port';
