@@ -92,3 +92,8 @@ const {host, hostType} = parseHost('127.0.0.1')
 const port = parsePort('900')
 const pubkey = parsePubkey('0200000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5f')
 ```
+
+
+---
+
+May the ⚡ be with you.

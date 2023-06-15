@@ -43,7 +43,7 @@ export function splitHostAndPort(addressString: string): {
         }
     }
 
-    // No square brackets.
+    // Max 1 colon. So it is not an ipv6.
     const colonCount = (addressString.split(":").length - 1)
     if (colonCount <= 1) {
         // Either tor or ipv4
@@ -54,7 +54,7 @@ export function splitHostAndPort(addressString: string): {
         }
     }
 
-    // Ipv6. Here the guessing begins.
+    // Ipv6 without square brackets []. Here the guessing begins.
     const isCompressed = addressString.includes('::')
     if (!isCompressed) {
         // Ipv6 consists of 8 groups plus an optional port.
@@ -73,6 +73,7 @@ export function splitHostAndPort(addressString: string): {
 
     // Ipv6 compressed
     // We can't determine the port here as it is ambigious.
+    // 2001:db8::8888:9735 may as well be a IPv6 (2001:db8::8888:9735) OR a IPv6:port (2001:db8::8888 and port 9735).
     throw new ParseError('Compressed ipv6 host without square brackets []', ParseFailureCode.INVALID_IPV6)
 }
 
