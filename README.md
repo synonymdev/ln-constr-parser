@@ -7,12 +7,12 @@ Convenient, dependency-free Lightning connection string parser for front- and ba
 ```typescript
 import {parseConnectionString} from '@synonymdev/ln-constr-parser';
 
-const connectionString = '0200000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5f@127.0.0.1:9736';
+const connectionString = '0200000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5f@127.0.0.1:9735';
 const {host, hostType, port, pubKey} = parseConnectionString(connectionString);
 
 console.log(host); // 127.0.0.1
 console.log(hostType); // ipv4. Depending on the address provided, it could be ipv6, torv3 or domain.
-console.log(port); // 9736
+console.log(port); // 9735
 console.log(pubKey); // 0200000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5f
 ```
 
@@ -49,16 +49,16 @@ try {
 The library supports all commonly used address formats.
 
 **ipv4**
-- Regular `pubkey@127.0.0.1:9735`.
+- Regular `pubkey@127.0.0.1:port`.
 - No port `pubkey@127.0.0.1`.
-- Square brackets `pubkey@[127.0.0.1]:9735`.
+- Square brackets `pubkey@[127.0.0.1]:port`.
 - Square brackets no port `pubkey@[127.0.0.1]`.
 
 **ipv6**
-- Square brackets `pubkey@[2001:db8:3333:4444:5555:6666:7777:8888]:9735`.
-- Square brackets compressed `pubkey@[2001:db8::8888]:9735`.
+- Square brackets `pubkey@[2001:db8:3333:4444:5555:6666:7777:8888]:port`.
+- Square brackets compressed `pubkey@[2001:db8::8888]:port`.
 - Square brackets no port `pubkey@[2001:db8:3333:4444:5555:6666:7777:8888]`.
-- Regular uncompressed `pubkey@2001:db8:3333:4444:5555:6666:7777:8888:9735`.
+- Regular uncompressed `pubkey@2001:db8:3333:4444:5555:6666:7777:8888:port`.
 - No port uncompressed `pubkey@2001:db8:3333:4444:5555:6666:7777:8888`.
 
 > **⚠️** It is always adviced to use square brackets `[]` with IPv6. It is impossible to separate compressed IPv6 from the port. Example:
@@ -66,15 +66,15 @@ The library supports all commonly used address formats.
 > The library will do its best to parse it correctly but will throw an error in case of ambiguity.
 
 **torv3**
-- Regular `pubkey@giexynrrloc2fewstcybenljdksidtglfydecbellzkl63din6w73eid.onion:9735`.
+- Regular `pubkey@giexynrrloc2fewstcybenljdksidtglfydecbellzkl63din6w73eid.onion:port`.
 - No port `pubkey@giexynrrloc2fewstcybenljdksidtglfydecbellzkl63din6w73eid.onion`.
-- Square brackets `pubkey@[giexynrrloc2fewstcybenljdksidtglfydecbellzkl63din6w73eid.onion]:9735`.
+- Square brackets `pubkey@[giexynrrloc2fewstcybenljdksidtglfydecbellzkl63din6w73eid.onion]:port`.
 - Square brackets no port `pubkey@[giexynrrloc2fewstcybenljdksidtglfydecbellzkl63din6w73eid.onion]`.
 
 **domain**
-- Regular `pubkey@synonym.to:9735`.
+- Regular `pubkey@synonym.to:port`.
 - No port `pubkey@synonym.to`.
-- Square brackets `pubkey@[synonym.to]:9735`.
+- Square brackets `pubkey@[synonym.to]:port`.
 - Square brackets no port `pubkey@[synonym.to]`.
 
 ## Parse Subcomponents
