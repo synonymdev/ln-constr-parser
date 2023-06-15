@@ -1,6 +1,6 @@
 # ln-constr-parser
 
-Convenient Lightning connection string parser for frontend and backend.
+Convenient, dependency-free Lightning connection string parser for front- and backend.
 
 ## Usage
 
