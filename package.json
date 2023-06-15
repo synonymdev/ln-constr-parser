@@ -1,6 +1,6 @@
 {
   "name": "@synonymdev/ln-constr-parser",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.1",
   "description": "Lightning Connection String Parser",
   "main": "dist/index.js",
   "author": "Severin Bühler",
@@ -13,6 +13,17 @@
     "type": "git",
     "url": "git+https://github.com/synonymdev/ln-constr-parser.git"
   },
+  "keywords": [
+    "lightning",
+    "network",
+    "connection",
+    "string",
+    "parser",
+    "validation",
+    "validator",
+    "bitcoin",
+    "nodeid"
+  ],
   "scripts": {
     "test": "npx jest",
     "build": "tsc",
