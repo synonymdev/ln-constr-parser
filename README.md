@@ -13,7 +13,7 @@ const connectionString = '0200000000a3eff613189ca6c4070c89206ad658e286751eca1f29
 const {host, hostType, port, pubKey} = parseConnectionString(connectionString);
 
 console.log(host); // 127.0.0.1
-console.log(hostType); // ipv4. Depending on the address provided, it could be ipv6, torv3 or domain.
+console.log(hostType); // ipv4. Depending on the address provided, it could also be ipv6, torv3 or domain.
 console.log(port); // 9735
 console.log(pubKey); // 0200000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5f
 ```
@@ -46,7 +46,7 @@ try {
 }
 ```
 
-## Supported address formats
+## Supported Address Formats
 
 The library supports all commonly used address formats.
 
