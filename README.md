@@ -61,7 +61,7 @@ The library supports all commonly used address formats.
 - Regular uncompressed `pubkey@2001:db8:3333:4444:5555:6666:7777:8888:port`.
 - No port uncompressed `pubkey@2001:db8:3333:4444:5555:6666:7777:8888`.
 
-> **⚠️** It is always adviced to use square brackets `[]` with IPv6. It is impossible to separate compressed IPv6 from the port. Example:
+> **⚠️** It is always adviced to use square brackets `[]` with IPv6. It is impossible to separate a compressed IPv6 from the port. Example:
 > `2001:db8::8888:9735` may as well be a IPv6 (`2001:db8::8888:9735`) OR a IPv6:port (`2001:db8::8888` and port `9735`).
 > The library will do its best to parse it correctly but will throw an error in case of ambiguity.
 
