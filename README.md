@@ -1,5 +1,7 @@
 # ln-constr-parser
 
+[![NPM version](https://img.shields.io/npm/v/@synonymdev/ln-constr-parser?color=%23FFAE00&style=flat-square)](https://www.npmjs.com/package/@synonymdev/ln-constr-parser)
+
 Convenient, dependency-free Lightning connection string parser for front- and backend.
 
 ## Usage
