@@ -1,0 +1,32 @@
+{
+  "name": "@synonymdev/ln-constr-parser",
+  "version": "0.1.0-beta.0",
+  "description": "Lightning Connection String Parser",
+  "main": "dist/index.js",
+  "author": "Severin Bühler",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/synonymdev/ln-constr-parser/issues"
+  },
+  "homepage": "https://github.com/synonymdev/ln-constr-parser#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/synonymdev/ln-constr-parser.git"
+  },
+  "scripts": {
+    "test": "npx jest",
+    "build": "tsc",
+    "start": "npm run build && node dist/index.js",
+    "prepublishOnly": "tsc"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "ts-loader": "^9.4.2",
+    "typescript": "^4.9.4"
+  },
+  "types": "dist/index.d.ts",
+  "dependencies": {
+  }
+}
