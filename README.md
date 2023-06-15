@@ -60,6 +60,7 @@ The library supports all commonly used address formats.
 - Square brackets `pubkey@[2001:db8:3333:4444:5555:6666:7777:8888]:port`.
 - Square brackets compressed `pubkey@[2001:db8::8888]:port`.
 - Square brackets no port `pubkey@[2001:db8:3333:4444:5555:6666:7777:8888]`.
+- Square brackets compressed no port `pubkey@[2001:db8::8888]`.
 - Regular uncompressed `pubkey@2001:db8:3333:4444:5555:6666:7777:8888:port`.
 - No port uncompressed `pubkey@2001:db8:3333:4444:5555:6666:7777:8888`.
 
