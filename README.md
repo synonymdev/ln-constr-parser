@@ -18,6 +18,13 @@ console.log(port); // 9735
 console.log(pubKey); // 0200000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5f
 ```
 
+The `port` is optional. You can make the port mandatory so the parser will throw an error. This also avoids the
+ipv6 ambiguity problem (see below).
+
+```typescript
+parseConnectionString(connectionString, {portMandatory: true})
+```
+
 ### Parse Errors
 
 In case of an invalid connection string, the parser will throw a detailed error of what is wrong.
@@ -34,6 +41,8 @@ try {
         if (e.code === ParseFailureCode.INVALID_HOST) {
             console.log('Host value is invalid.')
         } else if (e.codee === ParseFailureCode.INVALID_IPV6) {
+            console.log('IPv6 host is invalid.')
+        } else if (e.codee === ParseFailureCode.AMBIGUOUS_IPV6) {
             console.log('IPv6 host is ambiguous. Use square brackets [] like pubkey@[ipv6]:port.')
         } else if (e.code === ParseFailureCode.INVALID_PORT) {
             console.log('Invalid port.')
@@ -48,7 +57,11 @@ try {
 
 ## Supported Address Formats
 
-The library supports all commonly used address formats.
+The library supports all commonly used address formats in the form of 
+- `pubkey@host:port`
+- `pubkey@host`
+- `pubkey@[host]:port`
+- `pubkey@[host]`
 
 **ipv4**
 - Regular `pubkey@127.0.0.1:port`.
@@ -64,7 +77,7 @@ The library supports all commonly used address formats.
 - Regular uncompressed `pubkey@2001:db8:3333:4444:5555:6666:7777:8888:port`.
 - No port uncompressed `pubkey@2001:db8:3333:4444:5555:6666:7777:8888`.
 
-> **⚠️** It is always adviced to use square brackets `[]` with IPv6. It is impossible to separate a compressed IPv6 from the port. Example:
+> **⚠️ Ambiguity problem** If you don't make the port mandatory, it is adviced to use square brackets `[]` with IPv6. It is impossible to separate a compressed IPv6 from the port. Example:
 > `2001:db8::8888:9735` may as well be a IPv6 (`2001:db8::8888:9735`) OR a IPv6:port (`2001:db8::8888` and port `9735`).
 > The library will do its best to parse it correctly but will throw an error in case of ambiguity.
 
@@ -79,6 +92,9 @@ The library supports all commonly used address formats.
 - No port `pubkey@synonym.to`.
 - Square brackets `pubkey@[synonym.to]:port`.
 - Square brackets no port `pubkey@[synonym.to]`.
+
+
+
 
 ## Parse Subcomponents
 

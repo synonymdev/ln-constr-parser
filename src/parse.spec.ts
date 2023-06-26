@@ -11,6 +11,10 @@ describe('parse', () => {
         const {notValidatedHost: host2, notValidatedPort: port2} = splitHostAndPort('gwdllz5g7vky2q4gr45zguvoajzf33czreca3a3exosftx72ekppkuqd.onion:300')
         expect(host2).toEqual('gwdllz5g7vky2q4gr45zguvoajzf33czreca3a3exosftx72ekppkuqd.onion')
         expect(port2).toEqual('300')
+
+        const {notValidatedHost: host3, notValidatedPort: port3} = splitHostAndPort('127.0.0.1')
+        expect(host3).toEqual('127.0.0.1')
+        expect(port3).toEqual(undefined)
     });
 
     test('splitHostAndPort with []', async () => {
@@ -43,8 +47,12 @@ describe('parse', () => {
             if (!(e instanceof ParseError)) {
                 throw e
             }
-            expect(e.code).toEqual(ParseFailureCode.INVALID_IPV6)
+            expect(e.code).toEqual(ParseFailureCode.AMBIGUOUS_IPV6)
         }
+
+        const {notValidatedHost: host3, notValidatedPort: port3} = splitHostAndPort('2001:db8:3333:4444::7777:8888:300', {portMandatory: true})
+        expect(host3).toEqual('2001:db8:3333:4444::7777:8888')
+        expect(port3).toEqual('300')
     });
 
     test('parseHost', async () => {
@@ -104,6 +112,17 @@ describe('parse', () => {
         expect(host2).toEqual('2001:db8:3333:4444:5555:6666:7777:8888')
         expect(type2).toEqual('ipv6')
         expect(port2).toEqual(300)
+
+
+        try {
+            parseAddress('127.0.0.1', {portMandatory: true})
+            expect(true).toEqual(false)
+        } catch (e: any) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
+            expect(e.code).toEqual(ParseFailureCode.INVALID_PORT)
+        }
     });
 
     test('parsePort', async () => {
@@ -123,6 +142,16 @@ describe('parse', () => {
 
         try {
             parsePort('65536')
+            expect(true).toEqual(false)
+        } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
+            expect(e.code).toEqual(ParseFailureCode.INVALID_PORT)
+        }
+
+        try {
+            parsePort(undefined, {portMandatory: true})
             expect(true).toEqual(false)
         } catch (e) {
             if (!(e instanceof ParseError)) {
@@ -201,6 +230,16 @@ describe('parse', () => {
                 throw e
             }
             expect(e.code).toEqual(ParseFailureCode.INVALID_ATS)
+        }
+
+        try {
+            parseConnectionString('0200000000a3eff613189ca6c4070c89206ad658e286751eca1f29262948247a5f@127.0.0.1', {portMandatory: true})
+            expect(true).toEqual(false)
+        } catch (e) {
+            if (!(e instanceof ParseError)) {
+                throw e
+            }
+            expect(e.code).toEqual(ParseFailureCode.INVALID_PORT)
         }
 
         expect(() => parseConnectionString('@')).toThrow(ParseError)

@@ -9,6 +9,10 @@ export enum ParseFailureCode {
      */
     INVALID_IPV6 = 'invalidIpv6',
     /**
+     * Provided Ipv6 is ambigious and can not be separated from the port without guessing.
+     */
+    AMBIGUOUS_IPV6 = 'ambiguousIpv6',
+    /**
      * Port is invalid. Must be between 1 and 65535.
      */
     INVALID_PORT = 'invalidPort',

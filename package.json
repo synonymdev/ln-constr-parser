@@ -1,6 +1,6 @@
 {
   "name": "@synonymdev/ln-constr-parser",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Lightning Connection String Parser",
   "main": "dist/index.js",
   "author": "Severin Bühler",

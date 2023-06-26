@@ -26,9 +26,10 @@ export interface ParsedConnectionString {
 /**
  * Splits the address to a host and optionally a port. Throws ParseError if the address is invalid.
  * @param addressString 
+ * @param opts.portMandatory Last number after colon is always port. This removes the IPv6 ambiguity because the port is always at the end.
  * @returns 
  */
-export function splitHostAndPort(addressString: string): {
+export function splitHostAndPort(addressString: string, opts: Partial<{portMandatory: boolean}> = {}): {
     notValidatedHost: string,
     notValidatedPort?: string
 } {
@@ -54,6 +55,17 @@ export function splitHostAndPort(addressString: string): {
         }
     }
 
+    if (opts.portMandatory) {
+        // Port is provided in the address string. So we can split on the last colon.
+        const splitted = addressString.split(":")
+        const host = splitted.slice(0, -1).join(':')
+        const port = splitted[splitted.length - 1]
+        return {
+            notValidatedHost: host,
+            notValidatedPort: port
+        }
+    }
+
     // Ipv6 without square brackets []. Here the guessing begins.
     const isCompressed = addressString.includes('::')
     if (!isCompressed) {
@@ -74,7 +86,7 @@ export function splitHostAndPort(addressString: string): {
     // Ipv6 compressed
     // We can't determine the port here as it is ambigious.
     // 2001:db8::8888:9735 may as well be a IPv6 (2001:db8::8888:9735) OR a IPv6:port (2001:db8::8888 and port 9735).
-    throw new ParseError('Compressed ipv6 host without square brackets []', ParseFailureCode.INVALID_IPV6)
+    throw new ParseError('Compressed ipv6 host without square brackets []', ParseFailureCode.AMBIGUOUS_IPV6)
 }
 
 /**
@@ -124,13 +136,14 @@ export function parseHost(hostString: string): { host: string, hostType: HostTyp
  * Examples: 127.0.0.1:9375, [::1]:9375, synonym.to:9375, 127.0.0.1.
  * Throws ParseError if the address is invalid.
  * @param addressString 
+ * @param opts.portMandatory If true, throws ParseError if port is not provided.
  * @returns 
  */
-export function parseAddress(addressString: string): { host: string, port?: number, hostType: HostType } {
-    const { notValidatedHost, notValidatedPort } = splitHostAndPort(addressString)
+export function parseAddress(addressString: string, opts: Partial<{portMandatory: boolean}> = {}): { host: string, port?: number, hostType: HostType } {
+    const { notValidatedHost, notValidatedPort } = splitHostAndPort(addressString, {portMandatory: opts.portMandatory})
     const { host, hostType } = parseHost(notValidatedHost)
 
-    const port = parsePort(notValidatedPort)
+    const port = parsePort(notValidatedPort, {portMandatory: opts.portMandatory})
 
     return {
         port: port,
@@ -142,11 +155,16 @@ export function parseAddress(addressString: string): { host: string, port?: numb
 /**
  * Parse port number. Must be between 1 and 65535. Throws ParseError if the port is invalid.
  * @param portString 
+ * @param opts.portMandatory If true, throws ParseError if port is not provided.
  * @returns 
  */
-export function parsePort(portString?: string): number | undefined {
+export function parsePort(portString?: string, opts: Partial<{portMandatory: boolean}> = {}): number | undefined {
     if (!portString) {
-        return undefined
+        if (opts.portMandatory) {
+            throw new ParseError('Port is mandatory but is not provided.', ParseFailureCode.INVALID_PORT)
+        } else {
+            return undefined
+        }
     }
     const portMatch = portRegex.exec(portString)
     if (!portMatch) {
@@ -172,9 +190,10 @@ export function parsePubkey(pubkeyString: string): string {
 /**
  * Simple connection string parse. Throws ConnectionStringValidationError if the string is invalid.
  * @param connectionString Connection string to parse.
+ * @param opts.portMandatory Last number after colon is always port. This removes the IPv6 ambiguity because the port is always at the end.
  * @returns 
  */
-export function parseConnectionString(connectionString: string): ParsedConnectionString {
+export function parseConnectionString(connectionString: string, opts: Partial<{portMandatory: boolean}> = {}): ParsedConnectionString {
     const split = connectionString.split('@')
     if (split.length !== 2) {
         throw new ParseError('@ does not split the string in two parts.', ParseFailureCode.INVALID_ATS)
@@ -184,7 +203,7 @@ export function parseConnectionString(connectionString: string): ParsedConnectio
     const pubkey = parsePubkey(pubkeyString)
 
     const addressString = split[1]
-    const address = parseAddress(addressString)
+    const address = parseAddress(addressString, {portMandatory: opts.portMandatory})
 
     return {
         pubkey: pubkey,
